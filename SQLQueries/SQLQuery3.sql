@@ -11,6 +11,9 @@ FROM Customer
 WHERE Country = 'Brazil';
 
 -- 3. list all sales agents
+SELECT *
+FROM Employee
+WHERE Title LIKE '%Sales%';
 
 -- 4. show a list of all countries in billing addresses on invoices.
 
