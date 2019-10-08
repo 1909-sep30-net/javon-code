@@ -31,5 +31,12 @@ FROM InvoiceLine
 WHERE InvoiceId = 37;
 
 -- 7. how many invoices per country?
+SELECT BillingCountry, COUNT(*) [Number of invoices]
+FROM Invoice
+GROUP BY BillingCountry;
 
 -- 8. show total sales per country, ordered by highest sales first.
+SELECT BillingCountry, SUM(Total) [Total Sales]
+FROM Invoice
+GROUP BY BillingCountry
+ORDER BY SUM(Total) DESC;
