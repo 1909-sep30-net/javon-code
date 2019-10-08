@@ -21,8 +21,14 @@ FROM Invoice;
 
 -- 5. how many invoices were there in 2009, and what was the sales total for that year?
 --    (extra challenge: find the invoice count sales total for every year, using one query)
+SELECT YEAR(InvoiceDate) [Invoice Year], COUNT(*) AS [Number of Invoices], SUM(Total) AS [Sales Total]
+FROM Invoice
+GROUP BY YEAR(InvoiceDate);
 
 -- 6. how many line items were there for invoice #37?
+SELECT COUNT(*) AS [Line Items with Invoice #37]
+FROM InvoiceLine
+WHERE InvoiceId = 37;
 
 -- 7. how many invoices per country?
 
