@@ -62,11 +62,51 @@ ON trk.MediaTypeId = mt.MediaTypeId
 WHERE mt.Name LIKE '%video%'
 ORDER BY trk.Milliseconds DESC
 
+
+SELECT TOP 1 trk.*
+FROM Track trk
+WHERE trk.MediaTypeId IN (
+SELECT mt.MediaTypeId
+FROM MediaType mt
+WHERE mt.Name LIKE '%video%'
+)
+ORDER BY trk.Milliseconds DESC
+
 -- 4. find the names of the customers who live in the same city as the
 --    boss employee (the one who reports to nobody)
+SELECT cust.FirstName, cust.LastName
+FROM Customer cust
+WHERE cust.City IN (
+SELECT emp.City
+FROM Employee emp
+WHERE emp.ReportsTo IS NULL
+)
+
+SELECT cust.FirstName, cust.LastName
+FROM Employee emp
+JOIN Customer cust
+ON emp.City = cust.City
+WHERE emp.ReportsTo IS NULL
 
 -- 5. how many audio tracks were bought by German customers, and what was
 --    the total price paid for them?
+SELECT COUNT(*) [Audio Tracks Bought By German Customers], SUM(il.Quantity * il.UnitPrice) [Total Price Paid]
+FROM InvoiceLine il
+JOIN Invoice i
+ON il.InvoiceId = i.InvoiceId
+JOIN Customer cust
+ON i.CustomerId = cust.CustomerId
+JOIN Track trk
+ON trk.TrackId = il.TrackId
+JOIN MediaType mt
+ON mt.MediaTypeId = trk.MediaTypeId
+WHERE cust.Country = 'Germany'
+AND mt.Name LIKE '%audio%'
 
 -- 6. list the names and countries of the customers supported by an employee
 --    who was hired younger than 35.
+SELECT cust.FirstName, cust.LastName, cust.Country
+FROM Customer cust
+JOIN Employee emp
+ON cust.SupportRepId = emp.EmployeeId
+WHERE DATEDIFF(YEAR, emp.BirthDate, emp.HireDate) < 35
